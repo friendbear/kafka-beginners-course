@@ -5,11 +5,13 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
 import org.slf4j.Logger;
 
 public class ProducerDemoCallback {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         Logger logger = LoggerFactory.getLogger(ProducerDemoCallback.class);
 
@@ -27,9 +29,13 @@ public class ProducerDemoCallback {
 
         for (int i = 0; i < 10; i++) {
 
+            String topic = "first_topic";
+            String value = "hello world" + Integer.toString(i);
+            String key = "id_" + Integer.toString(i);
+
             // create a producer record
             ProducerRecord<String, String> record =
-                    new ProducerRecord<String, String>("first_topic", "hello world " + Integer.toString(i));
+                    new ProducerRecord<>("first_topic", key, "hello world " + Integer.toString(i));
 
             // send data - asynchronous
             producer.send(record, new Callback() {
@@ -47,7 +53,7 @@ public class ProducerDemoCallback {
                         logger.error("Error while producing", e);
                     }
                 }
-            });
+            }).get(); // block the .send()  to make it synchronous - don't do this in production!
         }
 
         // flush data

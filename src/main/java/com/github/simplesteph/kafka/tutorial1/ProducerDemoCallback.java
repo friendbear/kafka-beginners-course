@@ -25,34 +25,35 @@ public class ProducerDemoCallback {
 
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
 
-        // create a
-        ProducerRecord<String, String> record =
-                new ProducerRecord<String, String>("first_topic", "hello world");
+        for (int i = 0; i < 10; i++) {
 
-        // send data - asynchrononus
-        producer.send(record, new Callback() {
-            @Override
-            public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-                // executes every time a record is successfully sent or an exception is thrown
-                if (e == null) {
-                    // the record was successfully sent
-                    logger.info("Received new metadata. \n" +
-                            "Topic:" + recordMetadata.topic() + "\n" +
-                            "Partition: " + recordMetadata.partition() + "\n" +
-                            "Offset: " + recordMetadata.offset() + "\n" +
-                            "Timestamp:" + recordMetadata.timestamp());
-                } else {
-                    logger.error("Error while producing", e);
+            // create a producer record
+            ProducerRecord<String, String> record =
+                    new ProducerRecord<String, String>("first_topic", "hello world " + Integer.toString(i));
+
+            // send data - asynchronous
+            producer.send(record, new Callback() {
+                @Override
+                public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+                    // executes every time a record is successfully sent or an exception is thrown
+                    if (e == null) {
+                        // the record was successfully sent
+                        logger.info("Received new metadata. \n" +
+                                "Topic:" + recordMetadata.topic() + "\n" +
+                                "Partition: " + recordMetadata.partition() + "\n" +
+                                "Offset: " + recordMetadata.offset() + "\n" +
+                                "Timestamp:" + recordMetadata.timestamp());
+                    } else {
+                        logger.error("Error while producing", e);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // flush data
         producer.flush();
 
         // flush and close
         producer.close();
-
-
     }
 }

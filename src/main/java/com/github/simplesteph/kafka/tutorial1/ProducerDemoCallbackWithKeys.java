@@ -36,7 +36,7 @@ public class ProducerDemoCallback {
             // create a producer record
             ProducerRecord<String, String> record =
                     new ProducerRecord<>("first_topic", key, "hello world " + Integer.toString(i));
-
+            logger.info("Key: " + key);
             // send data - asynchronous
             producer.send(record, new Callback() {
                 @Override

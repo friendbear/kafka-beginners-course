@@ -9,11 +9,11 @@ import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
 
-public class ProducerDemoCallback {
+public class ProducerDemoCallbackWithKeys {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
-        Logger logger = LoggerFactory.getLogger(ProducerDemoCallback.class);
+        Logger logger = LoggerFactory.getLogger(ProducerDemoCallbackWithKeys.class);
 
         String bootstrapServers = "127.0.0.1:9092";
         // create Producer properties
